@@ -34,10 +34,9 @@
             // picCell
             // 
             this.picCell.BackColor = System.Drawing.Color.Silver;
-            this.picCell.Location = new System.Drawing.Point(121, 15);
-            this.picCell.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.picCell.Location = new System.Drawing.Point(56, 8);
             this.picCell.Name = "picCell";
-            this.picCell.Size = new System.Drawing.Size(462, 194);
+            this.picCell.Size = new System.Drawing.Size(213, 97);
             this.picCell.TabIndex = 9;
             this.picCell.TabStop = false;
             this.picCell.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picCell_MouseDown);
@@ -47,33 +46,33 @@
             // picFooter
             // 
             this.picFooter.BackColor = System.Drawing.Color.Gray;
-            this.picFooter.Location = new System.Drawing.Point(121, 221);
-            this.picFooter.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.picFooter.Location = new System.Drawing.Point(56, 110);
             this.picFooter.Name = "picFooter";
-            this.picFooter.Size = new System.Drawing.Size(462, 76);
+            this.picFooter.Size = new System.Drawing.Size(213, 38);
             this.picFooter.TabIndex = 8;
             this.picFooter.TabStop = false;
             // 
             // picRow
             // 
             this.picRow.BackColor = System.Drawing.Color.DarkGray;
-            this.picRow.Location = new System.Drawing.Point(16, 15);
-            this.picRow.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.picRow.Location = new System.Drawing.Point(7, 8);
             this.picRow.Name = "picRow";
-            this.picRow.Size = new System.Drawing.Size(91, 194);
+            this.picRow.Size = new System.Drawing.Size(42, 97);
             this.picRow.TabIndex = 6;
             this.picRow.TabStop = false;
+            this.picRow.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picRow_MouseDown);
+            this.picRow.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picRow_MouseMove);
+            this.picRow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picRow_MouseUp);
             // 
             // Comp
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(598, 312);
+            this.ClientSize = new System.Drawing.Size(276, 156);
             this.Controls.Add(this.picCell);
             this.Controls.Add(this.picFooter);
             this.Controls.Add(this.picRow);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.Name = "Comp";
             this.Text = "Comp";
             this.Load += new System.EventHandler(this.Comp_Load);
