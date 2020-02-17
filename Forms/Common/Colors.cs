@@ -21,7 +21,7 @@ namespace Forms {
 
         public static Color TableFont = Color.FromArgb(255, 255, 255);
         public static Color TableHeader = Color.FromArgb(63, 63, 63);
-        public static Color TableCell = Color.FromArgb(31, 43, 53);
+        public static Color TableCell = Color.FromArgb(23, 31, 31);
         public static Color TableBorder = Color.FromArgb(114, 99, 78);
         public static Color TableBorderDark = Color.FromArgb(76, 66, 52);
         public static Color TableBorderLight = Color.FromArgb(184, 169, 150);
