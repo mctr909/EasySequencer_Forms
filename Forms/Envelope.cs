@@ -192,13 +192,13 @@ namespace Forms {
 
                 switch (moveCol) {
                 case 0:
-                    mGValue.DrawLine(Colors.PGraphLineRed, 0, pRise, TableColumnWidth * 4, pRise);
+                    mGValue.DrawLine(Colors.PGraphBorder, 0, pRise, TableColumnWidth * 4, pRise);
                     break;
                 case 1:
-                    mGValue.DrawLine(Colors.PGraphLineRed, 0, pTop, TableColumnWidth * 4, pTop);
+                    mGValue.DrawLine(Colors.PGraphBorder, 0, pTop, TableColumnWidth * 4, pTop);
                     break;
                 case 3:
-                    mGValue.DrawLine(Colors.PGraphLineRed, 0, pFall, TableColumnWidth * 4, pFall);
+                    mGValue.DrawLine(Colors.PGraphBorder, 0, pFall, TableColumnWidth * 4, pFall);
                     break;
                 }
 
@@ -278,16 +278,16 @@ namespace Forms {
 
                 switch (moveCol) {
                 case 0:
-                    mGValue.DrawLine(Colors.PGraphLineRed, 0, pRise, TableColumnWidth * 5, pRise);
+                    mGValue.DrawLine(Colors.PGraphBorder, 0, pRise, TableColumnWidth * 5, pRise);
                     break;
                 case 1:
-                    mGValue.DrawLine(Colors.PGraphLineRed, 0, pTop, TableColumnWidth * 5, pTop);
+                    mGValue.DrawLine(Colors.PGraphBorder, 0, pTop, TableColumnWidth * 5, pTop);
                     break;
                 case 3:
-                    mGValue.DrawLine(Colors.PGraphLineRed, 0, pSustain, TableColumnWidth * 5, pSustain);
+                    mGValue.DrawLine(Colors.PGraphBorder, 0, pSustain, TableColumnWidth * 5, pSustain);
                     break;
                 case 4:
-                    mGValue.DrawLine(Colors.PGraphLineRed, 0, pFall, TableColumnWidth * 5, pFall);
+                    mGValue.DrawLine(Colors.PGraphBorder, 0, pFall, TableColumnWidth * 5, pFall);
                     break;
                 }
 
@@ -350,10 +350,10 @@ namespace Forms {
 
                 switch (moveCol) {
                 case 1:
-                    mGValue.DrawLine(Colors.PGraphLineRed, 0, pTop, TableColumnWidth * 5, pTop);
+                    mGValue.DrawLine(Colors.PGraphBorder, 0, pTop, TableColumnWidth * 5, pTop);
                     break;
                 case 3:
-                    mGValue.DrawLine(Colors.PGraphLineRed, 0, pSustain, TableColumnWidth * 5, pSustain);
+                    mGValue.DrawLine(Colors.PGraphBorder, 0, pSustain, TableColumnWidth * 5, pSustain);
                     break;
                 }
 
