@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
@@ -34,8 +33,8 @@ namespace Forms {
         private IntPtr mPtrUvL;
         private IntPtr mPtrUvR;
 
-        private System.Windows.Forms.Timer mTimer;
-        private System.Windows.Forms.Timer mTimer2;
+        private Timer mTimer;
+        private Timer mTimer2;
         private double theta = 0.0;
 
         private Bitmap mBmpRow;
@@ -64,22 +63,22 @@ namespace Forms {
             Marshal.StructureToPtr(0.0, mPtrUvL, true);
             Marshal.StructureToPtr(0.0, mPtrUvR, true);
 
-            mTimer = new System.Windows.Forms.Timer();
+            mTimer = new Timer();
             mTimer.Tick += new EventHandler((object s, EventArgs ev) => {
                 draw();
             });
             mTimer.Enabled = true;
-            mTimer.Interval = 16;
+            mTimer.Interval = 1;
             mTimer.Start();
 
-            mTimer2 = new System.Windows.Forms.Timer();
+            mTimer2 = new Timer();
             mTimer2.Tick += new EventHandler((object s, EventArgs ev) => {
-                Marshal.StructureToPtr(0.5 - 0.5 * Math.Cos(theta), mPtrUvL, true);
-                Marshal.StructureToPtr(0.5 - 0.5 * Math.Sin(theta), mPtrUvR, true);
+                Marshal.StructureToPtr(0.5 - 0.5 * Math.Cos(2.7*theta), mPtrUvL, true);
+                Marshal.StructureToPtr(0.5 - 0.5 * Math.Sin(2.0*theta), mPtrUvR, true);
                 theta += Math.PI * 2 / 100;
             });
             mTimer2.Enabled = true;
-            mTimer2.Interval = 16;
+            mTimer2.Interval = 1;
             mTimer2.Start();
         }
 
@@ -177,7 +176,7 @@ namespace Forms {
         }
 
         private double posToDb(int pos) {
-            return (int)(pos * DbDispUnit * 5.0 / AmpDispUnit + 0.5) / 10.0 + MinDB;
+            return (int)(pos * DbDispUnit * 2.0 / AmpDispUnit + 0.5) / 4.0 + MinDB;
         }
 
         private double dbToPos(double db) {
@@ -223,15 +222,6 @@ namespace Forms {
             var pGainYR = pGainY - (int)(AmpDispUnit * (AmpDispCols - ZeroDbCol) / mRatio);
             var pOutputGainX = (int)dbToPos(-mOutputGain);
             var pOutputGainY = AmpDispHeight - pOutputGainX;
-
-            var psThresholdY = pThresholdY;
-            var psGainY = pGainY;
-            if (AmpDispHeight < psThresholdY + 20) {
-                psThresholdY = AmpDispHeight - 20;
-            }
-            if (AmpDispHeight < psGainY + 20) {
-                psGainY = AmpDispHeight - 20;
-            }
             //
             // left frame
             //
@@ -260,7 +250,7 @@ namespace Forms {
             mGRowValue.DrawString("0.0db", Fonts.Small, Colors.BFontTable, new RectangleF(
                 -3, pOutputGainY - AmpDispUnit,
                 mBmpRowValue.Width, AmpDispUnit), Fonts.AlignBR);
-            mGRowValue.DrawLine(Colors.PGraphValueBorder, 0, pOutputGainY, mBmpRowValue.Width, pOutputGainY);
+            mGRowValue.DrawLine(Colors.PGraphBoundaryValue, 0, pOutputGainY, mBmpRowValue.Width, pOutputGainY);
             picRow.Image = mBmpRowValue;
             //
             // table
@@ -289,26 +279,27 @@ namespace Forms {
                 }
             }
             //
+            mGCellValue.SmoothingMode = SmoothingMode.AntiAlias;
             mGCellValue.DrawLine(Colors.PGraphLine, 0, AmpDispHeight, pThresholdX, pThresholdY);
             mGCellValue.DrawLine(Colors.PGraphLine, pThresholdX, pThresholdY, AmpDispUnit * ZeroDbCol, pGainY);
             mGCellValue.DrawLine(Colors.PGraphLineAlpha, AmpDispUnit * ZeroDbCol, pGainY, AmpDispWidth, pGainYR);
             //
             mGCellValue.DrawLine(Colors.PTableBorderLight, 0, pOutputGainY, mBmpCellValue.Width, pOutputGainY);
-            mGCellValue.DrawLine(Colors.PGraphValueBorder, pThresholdX, AmpDispUnit, pThresholdX, AmpDispHeight);
-            mGCellValue.DrawLine(Colors.PGraphValueBorder, AmpDispUnit * ZeroDbCol, pGainY, AmpDispWidth, pGainY);
+            mGCellValue.DrawLine(Colors.PGraphBoundaryValue, pThresholdX, AmpDispUnit, pThresholdX, AmpDispHeight);
+            mGCellValue.DrawLine(Colors.PGraphBoundaryValue, AmpDispUnit * ZeroDbCol, pGainY, AmpDispWidth, pGainY);
             //
             var uvL = Marshal.PtrToStructure<double>(mPtrUvL);
             var uvR = Marshal.PtrToStructure<double>(mPtrUvR);
-            var uv = Math.Max(uvL, uvR);
-            if (uv < 1 / 1024.0) {
-                uv = 1 / 1024.0;
+            var uvDb = Math.Max(uvL, uvR);
+            if (uvDb < Math.Pow(10.0, MinDB / 20.0)) {
+                uvDb = Math.Pow(10.0, MinDB / 20.0);
             }
-            uv = Math.Log10(uv) * 20;
-            var pUv = (float)dbToPos(uv);
-            var pUvRa = (float)dbToPos(mThreshold + (uv - mThreshold) / mRatio);
+            uvDb = Math.Log10(uvDb) * 20;
+            var pUv = (float)dbToPos(uvDb);
+            var pUvRa = (float)dbToPos(mThreshold + (uvDb - mThreshold) / mRatio);
             var pThX = (float)dbToPos(mThreshold);
             var pThY = AmpDispHeight - pThX;
-            if (uv < mThreshold) {
+            if (uvDb < mThreshold) {
                 mGCellValue.DrawLine(Colors.PGraphLineGreen, 0, AmpDispHeight, pUv, AmpDispHeight - pUv);
             } else if (pUvRa <= pOutputGainX) {
                 mGCellValue.DrawLine(Colors.PGraphLineGreen, 0, AmpDispHeight, pThX, pThY);
@@ -317,20 +308,30 @@ namespace Forms {
                 mGCellValue.DrawLine(Colors.PGraphLineGreen, 0, AmpDispHeight, pThX, pThY);
                 mGCellValue.DrawLine(Colors.PGraphLineRed, pThX, pThY, pUv, AmpDispHeight - pUvRa);
             }
+            mGCellValue.SmoothingMode = SmoothingMode.None;
             //
             mGCellValue.FillPie(Colors.BGraphPoint, pThresholdX - 4, pThresholdY - 4, 8, 8, 0, 360);
             mGCellValue.DrawArc(Colors.PTableBorderLight, pThresholdX - 4, pThresholdY - 4, 8, 8, 0, 360);
             mGCellValue.FillPie(Colors.BGraphPoint, AmpDispUnit * ZeroDbCol - 4, pGainY - 4, 8, 8, 0, 360);
             mGCellValue.DrawArc(Colors.PTableBorderLight, AmpDispUnit * ZeroDbCol - 4, pGainY - 4, 8, 8, 0, 360);
             //
+            var psThresholdY = pThresholdY;
+            if (AmpDispHeight < psThresholdY + 20) {
+                psThresholdY = AmpDispHeight - 20;
+            }
+            var psGainY = pGainY;
+            if (AmpDispHeight < psGainY + 20) {
+                psGainY = AmpDispHeight - 20;
+            }
+            mGCellValue.DrawString(mThreshold.ToString("0.00db"), Fonts.Bold, Colors.BFontTable, new RectangleF(
+                0, AmpDispUnit,
+                AmpDispUnit * ZeroDbCol, AmpDispUnit), Fonts.AlignMC);
             mGCellValue.DrawString(mRatio.ToString("0.0"), Fonts.Bold, Colors.BFontTable, new RectangleF(
                 AmpDispUnit * ZeroDbCol, AmpDispUnit,
                 AmpDispUnit * (AmpDispCols - ZeroDbCol), AmpDispUnit), Fonts.AlignMC);
-            mGCellValue.DrawString((mThreshold + mOutputGain).ToString("0.0db"),
+            mGCellValue.DrawString((mThreshold + mOutputGain).ToString("0.00db"),
                 Fonts.Small, Colors.BFontTable, pThresholdX + 3, psThresholdY);
-            mGCellValue.DrawString(mThreshold.ToString("0.0db"),
-                Fonts.Small, Colors.BFontTable, pThresholdX + 3, AmpDispUnit * 5 / 4);
-            mGCellValue.DrawString((mGain + mOutputGain).ToString("0.0db"),
+            mGCellValue.DrawString((mGain + mOutputGain).ToString("0.00db"),
                 Fonts.Small, Colors.BFontTable, AmpDispUnit * ZeroDbCol + 3, psGainY);
 
             picCell.Image = mBmpCellValue;
@@ -349,7 +350,7 @@ namespace Forms {
             // left frame
             //
             mGRow.Clear(Colors.TableHeader);
-            mGRow.DrawString("Out", Fonts.Bold, Colors.BFontTable, new RectangleF(
+            mGRow.DrawString("Gain", Fonts.Bold, Colors.BFontTable, new RectangleF(
                 0, 0,
                 TableLeftFrameWidth, AmpDispUnit), Fonts.AlignMC);
             mGRow.DrawLine(Colors.PTableBorderBold,
@@ -364,7 +365,7 @@ namespace Forms {
                 mBmpCell.Width, mBmpCell.Height);
             for (var col = 1; col < AmpDispCols; col++) {
                 mGCell.DrawLine(0 == (col % 2) ? Colors.PTableBorder : Colors.PTableBorderDark,
-                    AmpDispUnit * col, 0,
+                    AmpDispUnit * col, AmpDispUnit * 2,
                     AmpDispUnit * col, mBmpCell.Height);
             }
             mGCell.FillRectangle(Colors.BTableHeader,
@@ -376,6 +377,9 @@ namespace Forms {
             mGCell.DrawString("Ratio", Fonts.Bold, Colors.BFontTable, new RectangleF(
                 AmpDispUnit * ZeroDbCol, 0,
                 AmpDispUnit * (AmpDispCols - ZeroDbCol), AmpDispUnit), Fonts.AlignMC);
+            mGCell.DrawLine(Colors.PTableBorderBold,
+                0, AmpDispUnit * 2,
+                mBmpCell.Width, AmpDispUnit * 2);
             mGCell.DrawLine(Colors.PTableBorderLight,
                 AmpDispUnit * ZeroDbCol, 0,
                 AmpDispUnit * ZeroDbCol, mBmpCell.Height);

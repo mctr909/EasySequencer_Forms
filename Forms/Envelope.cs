@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace Forms {
     public partial class Envelope : Form {
-        private const int TableColumnWidth = 74;
+        private const int TableColumnWidth = 70;
         private const int TableHeaderHeight = 30;
         private const int TableLeftFrameWidth = 65;
         private const int PitchDispUnit = 100;
@@ -66,26 +67,19 @@ namespace Forms {
                 releaseImageTime();
 
                 mGTime.Clear(Color.Transparent);
-                mGTime.DrawString(attack.ToString("0ms"),
-                    Fonts.Bold,
-                    Colors.BFontTable,
-                    new RectangleF(0, TableHeaderHeight, TableColumnWidth, TableHeaderHeight),
-                    Fonts.AlignMC);
-                mGTime.DrawString(hold.ToString("0ms"),
-                    Fonts.Bold,
-                    Colors.BFontTable,
-                    new RectangleF(TableColumnWidth, TableHeaderHeight, TableColumnWidth, TableHeaderHeight),
-                    Fonts.AlignMC);
-                mGTime.DrawString(decay.ToString("0ms"),
-                    Fonts.Bold,
-                    Colors.BFontTable,
-                    new RectangleF(TableColumnWidth * 2, TableHeaderHeight, TableColumnWidth, TableHeaderHeight),
-                    Fonts.AlignMC);
-                mGTime.DrawString(release.ToString("0ms"),
-                    Fonts.Bold,
-                    Colors.BFontTable,
-                    new RectangleF(TableColumnWidth * 4, TableHeaderHeight, TableColumnWidth, TableHeaderHeight),
-                    Fonts.AlignMC);
+                mGTime.DrawString(attack.ToString("0ms"), Fonts.Bold, Colors.BFontTable, new RectangleF(
+                    0, TableHeaderHeight,
+                    TableColumnWidth, TableHeaderHeight), Fonts.AlignMC);
+                mGTime.DrawString(hold.ToString("0ms"), Fonts.Bold, Colors.BFontTable, new RectangleF(
+                    TableColumnWidth, TableHeaderHeight,
+                    TableColumnWidth, TableHeaderHeight), Fonts.AlignMC);
+                mGTime.DrawString(decay.ToString("0ms"), Fonts.Bold, Colors.BFontTable, new RectangleF(
+                    TableColumnWidth * 2, TableHeaderHeight,
+                    TableColumnWidth, TableHeaderHeight), Fonts.AlignMC);
+                mGTime.DrawString(release.ToString("0ms"), Fonts.Bold, Colors.BFontTable, new RectangleF(
+                    TableColumnWidth * 4, TableHeaderHeight,
+                    TableColumnWidth, TableHeaderHeight), Fonts.AlignMC);
+
                 mPicTime.Image = mBmpTime;
             }
 
@@ -110,31 +104,18 @@ namespace Forms {
                 releaseImageTime();
 
                 mGTime.Clear(Color.Transparent);
-                mGTime.DrawString(attack.ToString("0ms"),
-                    Fonts.Bold,
-                    Colors.BFontTable,
-                    new RectangleF(0, TableHeaderHeight, TableColumnWidth, TableHeaderHeight),
-                    Fonts.AlignMC);
-                mGTime.DrawString(hold.ToString("0ms"),
-                    Fonts.Bold,
-                    Colors.BFontTable,
-                    new RectangleF(TableColumnWidth, TableHeaderHeight, TableColumnWidth, TableHeaderHeight),
-                    Fonts.AlignMC);
-                mGTime.DrawString(decay.ToString("0ms"),
-                    Fonts.Bold,
-                    Colors.BFontTable,
-                    new RectangleF(TableColumnWidth * 2, TableHeaderHeight, TableColumnWidth, TableHeaderHeight),
-                    Fonts.AlignMC);
-                mGTime.DrawString(release.ToString("0ms"),
-                    Fonts.Bold,
-                    Colors.BFontTable,
-                    new RectangleF(TableColumnWidth * 3, TableHeaderHeight, TableColumnWidth, TableHeaderHeight),
-                    Fonts.AlignMC);
-                mGTime.DrawString(range.ToString("0cent"),
-                    Fonts.Bold,
-                    Colors.BFontTable,
-                    new RectangleF(TableColumnWidth * 4, TableHeaderHeight, TableColumnWidth, TableHeaderHeight),
-                    Fonts.AlignMC);
+                mGTime.DrawString(attack.ToString("0ms"), Fonts.Bold, Colors.BFontTable, new RectangleF(
+                    0, TableHeaderHeight,
+                    TableColumnWidth, TableHeaderHeight), Fonts.AlignMC);
+                mGTime.DrawString(decay.ToString("0ms"), Fonts.Bold, Colors.BFontTable, new RectangleF(
+                    TableColumnWidth, TableHeaderHeight,
+                    TableColumnWidth, TableHeaderHeight), Fonts.AlignMC);
+                mGTime.DrawString(release.ToString("0ms"), Fonts.Bold, Colors.BFontTable, new RectangleF(
+                    TableColumnWidth * 2, TableHeaderHeight,
+                    TableColumnWidth, TableHeaderHeight), Fonts.AlignMC);
+                mGTime.DrawString(range.ToString("0cent"), Fonts.Bold, Colors.BFontTable, new RectangleF(
+                    TableColumnWidth * 3, TableHeaderHeight,
+                    TableColumnWidth * 2, TableHeaderHeight), Fonts.AlignMC);
                 mPicTime.Image = mBmpTime;
             }
 
@@ -169,10 +150,10 @@ namespace Forms {
                 var pTop = pOfs - (int)(Top * PitchDispUnit * 2 / range);
                 var pSustain = pOfs;
                 var pFall = pOfs - (int)(Fall * PitchDispUnit * 2 / range);
+
                 var psRise = pRise;
                 var psTop = pTop;
                 var psFall = pFall;
-
                 if (mPicValue.Height < psRise + 20) {
                     psRise = mPicValue.Height - 20;
                 }
@@ -184,34 +165,34 @@ namespace Forms {
                 }
 
                 releaseImageValue();
-
+                //
+                mGValue.SmoothingMode = SmoothingMode.AntiAlias;
                 mGValue.DrawLine(Colors.PGraphLineAlpha, 0, pRise, TableColumnWidth, pTop);
-                mGValue.DrawLine(Colors.PGraphLineAlpha, TableColumnWidth, pTop, TableColumnWidth * 2, pTop);
-                mGValue.DrawLine(Colors.PGraphLineAlpha, TableColumnWidth * 2, pTop, TableColumnWidth * 3, pSustain);
-                mGValue.DrawLine(Colors.PGraphLineAlpha, TableColumnWidth * 3, pSustain, TableColumnWidth * 4, pFall);
-
+                mGValue.DrawLine(Colors.PGraphLineAlpha, TableColumnWidth, pTop, TableColumnWidth * 2, pSustain);
+                mGValue.DrawLine(Colors.PGraphLineAlpha, TableColumnWidth * 2, pSustain, TableColumnWidth * 3, pFall);
                 switch (moveCol) {
                 case 0:
-                    mGValue.DrawLine(Colors.PGraphBorder, 0, pRise, TableColumnWidth * 4, pRise);
+                    mGValue.DrawLine(Colors.PGraphAuxiliary, 0, pRise, TableColumnWidth * 3, pRise);
                     break;
                 case 1:
-                    mGValue.DrawLine(Colors.PGraphBorder, 0, pTop, TableColumnWidth * 4, pTop);
+                    mGValue.DrawLine(Colors.PGraphAuxiliary, 0, pTop, TableColumnWidth * 3, pTop);
                     break;
-                case 3:
-                    mGValue.DrawLine(Colors.PGraphBorder, 0, pFall, TableColumnWidth * 4, pFall);
+                case 2:
+                    mGValue.DrawLine(Colors.PGraphAuxiliary, 0, pFall, TableColumnWidth * 3, pFall);
                     break;
                 }
-
+                mGValue.SmoothingMode = SmoothingMode.None;
+                //
                 mGValue.FillPie(Colors.BGraphPoint, -4, pRise - 4, 8, 8, 0, 360);
                 mGValue.FillPie(Colors.BGraphPoint, TableColumnWidth - 4, pTop - 4, 8, 8, 0, 360);
-                mGValue.FillPie(Colors.BGraphPoint, TableColumnWidth * 4 - 4, pFall - 4, 8, 8, 0, 360);
+                mGValue.FillPie(Colors.BGraphPoint, TableColumnWidth * 3 - 4, pFall - 4, 8, 8, 0, 360);
                 mGValue.DrawArc(Colors.PTableBorderLight, -4, pRise - 4, 8, 8, 0, 360);
                 mGValue.DrawArc(Colors.PTableBorderLight, TableColumnWidth - 4, pTop - 4, 8, 8, 0, 360);
-                mGValue.DrawArc(Colors.PTableBorderLight, TableColumnWidth * 4 - 4, pFall - 4, 8, 8, 0, 360);
-
+                mGValue.DrawArc(Colors.PTableBorderLight, TableColumnWidth * 3 - 4, pFall - 4, 8, 8, 0, 360);
+                //
                 mGValue.DrawString(Rise.ToString("0cent"), Fonts.Small, Colors.BFontTable, 3, psRise);
                 mGValue.DrawString(Top.ToString("0cent"), Fonts.Small, Colors.BFontTable, TableColumnWidth + 3, psTop);
-                mGValue.DrawString(Fall.ToString("0cent"), Fonts.Small, Colors.BFontTable, TableColumnWidth * 4 - 3, psFall, Fonts.AlignTR);
+                mGValue.DrawString(Fall.ToString("0cent"), Fonts.Small, Colors.BFontTable, TableColumnWidth * 3 - 3, psFall, Fonts.AlignTR);
 
                 mPicValue.Image = mBmpValue;
             }
@@ -250,11 +231,11 @@ namespace Forms {
                 var pTop = pOfs - (int)(Math.Log10(Top) * CutoffDispUnit * 4);
                 var pSustain = pOfs - (int)(Math.Log10(Sustain) * CutoffDispUnit * 4);
                 var pFall = pOfs - (int)(Math.Log10(Fall) * CutoffDispUnit * 4);
+
                 var psRise = pRise;
                 var psTop = pTop;
                 var psSustain = pSustain;
                 var psFall = pFall;
-
                 if (mPicValue.Height < psRise + 20) {
                     psRise = mPicValue.Height - 20;
                 }
@@ -269,28 +250,29 @@ namespace Forms {
                 }
 
                 releaseImageValue();
-
+                //
+                mGValue.SmoothingMode = SmoothingMode.AntiAlias;
                 mGValue.DrawLine(Colors.PGraphLineAlpha, 0, pRise, TableColumnWidth, pTop);
                 mGValue.DrawLine(Colors.PGraphLineAlpha, TableColumnWidth, pTop, TableColumnWidth * 2, pTop);
                 mGValue.DrawLine(Colors.PGraphLineAlpha, TableColumnWidth * 2, pTop, TableColumnWidth * 3, pSustain);
                 mGValue.DrawLine(Colors.PGraphLineAlpha, TableColumnWidth * 3, pSustain, TableColumnWidth * 4, pSustain);
                 mGValue.DrawLine(Colors.PGraphLineAlpha, TableColumnWidth * 4, pSustain, TableColumnWidth * 5, pFall);
-
                 switch (moveCol) {
                 case 0:
-                    mGValue.DrawLine(Colors.PGraphBorder, 0, pRise, TableColumnWidth * 5, pRise);
+                    mGValue.DrawLine(Colors.PGraphAuxiliary, 0, pRise, TableColumnWidth * 5, pRise);
                     break;
                 case 1:
-                    mGValue.DrawLine(Colors.PGraphBorder, 0, pTop, TableColumnWidth * 5, pTop);
+                    mGValue.DrawLine(Colors.PGraphAuxiliary, 0, pTop, TableColumnWidth * 5, pTop);
                     break;
                 case 3:
-                    mGValue.DrawLine(Colors.PGraphBorder, 0, pSustain, TableColumnWidth * 5, pSustain);
+                    mGValue.DrawLine(Colors.PGraphAuxiliary, 0, pSustain, TableColumnWidth * 5, pSustain);
                     break;
                 case 4:
-                    mGValue.DrawLine(Colors.PGraphBorder, 0, pFall, TableColumnWidth * 5, pFall);
+                    mGValue.DrawLine(Colors.PGraphAuxiliary, 0, pFall, TableColumnWidth * 5, pFall);
                     break;
                 }
-
+                mGValue.SmoothingMode = SmoothingMode.None;
+                //
                 mGValue.FillPie(Colors.BGraphPoint, -4, pRise - 4, 8, 8, 0, 360);
                 mGValue.FillPie(Colors.BGraphPoint, TableColumnWidth - 4, pTop - 4, 8, 8, 0, 360);
                 mGValue.FillPie(Colors.BGraphPoint, TableColumnWidth * 3 - 4, pSustain - 4, 8, 8, 0, 360);
@@ -299,7 +281,7 @@ namespace Forms {
                 mGValue.DrawArc(Colors.PTableBorderLight, TableColumnWidth - 4, pTop - 4, 8, 8, 0, 360);
                 mGValue.DrawArc(Colors.PTableBorderLight, TableColumnWidth * 3 - 4, pSustain - 4, 8, 8, 0, 360);
                 mGValue.DrawArc(Colors.PTableBorderLight, TableColumnWidth * 5 - 5, pFall - 4, 8, 8, 0, 360);
-
+                //
                 mGValue.DrawString(Rise.ToString("0Hz"), Fonts.Small, Colors.BFontTable, 3, psRise);
                 mGValue.DrawString(Top.ToString("0Hz"), Fonts.Small, Colors.BFontTable, TableColumnWidth + 3, psTop);
                 mGValue.DrawString(Sustain.ToString("0Hz"), Fonts.Small, Colors.BFontTable, TableColumnWidth * 3 + 3, psSustain);
@@ -324,44 +306,44 @@ namespace Forms {
 
                 var dbTop = 20 * Math.Log10(Top);
                 var dbSustain = 20 * Math.Log10(Sustain);
-
                 var pOfs = mPicValue.Height - 1;
                 var pRise = pOfs;
                 var pTop = AmpDispUnit - (int)(dbTop * AmpDispUnit / 6);
                 var pSustain = AmpDispUnit - (int)(dbSustain * AmpDispUnit / 6);
                 var pFall = pOfs;
-                var psTop = pTop;
-                var psSustain = pSustain;
 
+                var psTop = pTop;
                 if (mPicValue.Height < psTop + 20) {
                     psTop = mPicValue.Height - 20;
                 }
+                var psSustain = pSustain;
                 if (mPicValue.Height < psSustain + 20) {
                     psSustain = mPicValue.Height - 20;
                 }
 
                 releaseImageValue();
-
+                //
+                mGValue.SmoothingMode = SmoothingMode.AntiAlias;
                 mGValue.DrawLine(Colors.PGraphLineAlpha, 0, pRise, TableColumnWidth, pTop);
                 mGValue.DrawLine(Colors.PGraphLineAlpha, TableColumnWidth, pTop, TableColumnWidth * 2, pTop);
                 mGValue.DrawLine(Colors.PGraphLineAlpha, TableColumnWidth * 2, pTop, TableColumnWidth * 3, pSustain);
                 mGValue.DrawLine(Colors.PGraphLineAlpha, TableColumnWidth * 3, pSustain, TableColumnWidth * 4, pSustain);
                 mGValue.DrawLine(Colors.PGraphLineAlpha, TableColumnWidth * 4, pSustain, TableColumnWidth * 5, pFall);
-
                 switch (moveCol) {
                 case 1:
-                    mGValue.DrawLine(Colors.PGraphBorder, 0, pTop, TableColumnWidth * 5, pTop);
+                    mGValue.DrawLine(Colors.PGraphAuxiliary, 0, pTop, TableColumnWidth * 5, pTop);
                     break;
                 case 3:
-                    mGValue.DrawLine(Colors.PGraphBorder, 0, pSustain, TableColumnWidth * 5, pSustain);
+                    mGValue.DrawLine(Colors.PGraphAuxiliary, 0, pSustain, TableColumnWidth * 5, pSustain);
                     break;
                 }
-
+                mGValue.SmoothingMode = SmoothingMode.None;
+                //
                 mGValue.FillPie(Colors.BGraphPoint, TableColumnWidth - 4, pTop - 4, 8, 8, 0, 360);
                 mGValue.DrawArc(Colors.PTableBorderLight, TableColumnWidth - 4, pTop - 4, 8, 8, 0, 360);
                 mGValue.FillPie(Colors.BGraphPoint, TableColumnWidth * 3 - 4, pSustain - 4, 8, 8, 0, 360);
                 mGValue.DrawArc(Colors.PTableBorderLight, TableColumnWidth * 3 - 4, pSustain - 4, 8, 8, 0, 360);
-
+                //
                 mGValue.DrawString(dbTop.ToString("0.0db"), Fonts.Small, Colors.BFontTable, TableColumnWidth + 3, psTop);
                 mGValue.DrawString(dbSustain.ToString("0.0db"), Fonts.Small, Colors.BFontTable, TableColumnWidth * 3 + 3, psSustain);
 
@@ -542,15 +524,12 @@ namespace Forms {
                     mPitch.DAttack = delta;
                     break;
                 case 1:
-                    mPitch.DHold = delta;
-                    break;
-                case 2:
                     mPitch.DDecay = delta;
                     break;
-                case 3:
+                case 2:
                     mPitch.DRelease = delta;
                     break;
-                case 4:
+                case 3:
                     mPitch.DRange = (pos.X - mCurPos.X) / 10 * 100;
                     break;
                 }
@@ -603,7 +582,7 @@ namespace Forms {
                 switch (moveCol) {
                 case 0:
                 case 1:
-                case 3:
+                case 2:
                     mValueScroll = true;
                     Cursor.Current = Cursors.HSplit;
                     break;
@@ -666,7 +645,7 @@ namespace Forms {
                 case 1:
                     mPitch.Top = pitch;
                     break;
-                case 3:
+                case 2:
                     mPitch.Fall = pitch;
                     break;
                 }
@@ -748,8 +727,8 @@ namespace Forms {
                 0, mBmpCol.Height - 1,
                 mBmpCol.Width, mBmpCol.Height - 1);
             mGCol.DrawLine(Colors.PTableBorderBold,
-                TableColumnWidth * 4, 0,
-                TableColumnWidth * 4, mBmpCol.Height);
+                TableColumnWidth * 3, 0,
+                TableColumnWidth * 3, mBmpCol.Height);
             //
             mGCol.DrawLine(Colors.PTableBorder,
                 TableColumnWidth, 0,
@@ -766,43 +745,38 @@ namespace Forms {
                 Colors.BFontTable,
                 new RectangleF(0, 0, TableColumnWidth, TableHeaderHeight),
                 Fonts.AlignMC);
-            mGCol.DrawString("Hold",
+            mGCol.DrawString("Decay",
                 Fonts.Bold,
                 Colors.BFontTable,
                 new RectangleF(TableColumnWidth, 0, TableColumnWidth, TableHeaderHeight),
                 Fonts.AlignMC);
-            mGCol.DrawString("Decay",
+            mGCol.DrawString("Release",
                 Fonts.Bold,
                 Colors.BFontTable,
                 new RectangleF(TableColumnWidth * 2, 0, TableColumnWidth, TableHeaderHeight),
                 Fonts.AlignMC);
-            mGCol.DrawString("Release",
-                Fonts.Bold,
-                Colors.BFontTable,
-                new RectangleF(TableColumnWidth * 3, 0, TableColumnWidth, TableHeaderHeight),
-                Fonts.AlignMC);
             mGCol.DrawString("Range",
                 Fonts.Bold,
                 Colors.BFontTable,
-                new RectangleF(TableColumnWidth * 4, 0, TableColumnWidth, TableHeaderHeight),
+                new RectangleF(TableColumnWidth * 3, 0, TableColumnWidth * 2, TableHeaderHeight),
                 Fonts.AlignMC);
             //
             // table
             //
             mGCell.Clear(Colors.TableCell);
             mGCell.FillRectangle(Colors.BTableHeader,
-                TableColumnWidth * 4, 0,
-                TableColumnWidth * 4, mBmpCell.Height);
+                TableColumnWidth * 3, 0,
+                TableColumnWidth * 3, mBmpCell.Height);
             //
             mGCell.DrawLine(Colors.PTableBorder,
                 0, PitchDispUnit - 1,
-                mBmpCell.Width - TableColumnWidth, PitchDispUnit - 1);
+                mBmpCell.Width - TableColumnWidth * 2, PitchDispUnit - 1);
             mGCell.DrawLine(Colors.PTableBorderLight,
                 0, PitchDispUnit * 2 - 1,
-                mBmpCell.Width - TableColumnWidth, PitchDispUnit * 2 - 1);
+                mBmpCell.Width - TableColumnWidth * 2, PitchDispUnit * 2 - 1);
             mGCell.DrawLine(Colors.PTableBorder,
                 0, PitchDispUnit * 3 - 1,
-                mBmpCell.Width - TableColumnWidth, PitchDispUnit * 3 - 1);
+                mBmpCell.Width - TableColumnWidth * 2, PitchDispUnit * 3 - 1);
             //
             mGCell.DrawLine(Colors.PTableBorder,
                 TableColumnWidth, 0,
@@ -810,13 +784,10 @@ namespace Forms {
             mGCell.DrawLine(Colors.PTableBorder,
                 TableColumnWidth * 2, 0,
                 TableColumnWidth * 2, mBmpCell.Height);
-            mGCell.DrawLine(Colors.PTableBorder,
+            //
+            mGCell.DrawLine(Colors.PTableBorderBold,
                 TableColumnWidth * 3, 0,
                 TableColumnWidth * 3, mBmpCell.Height);
-
-            mGCell.DrawLine(Colors.PTableBorderBold,
-                TableColumnWidth * 4, 0,
-                TableColumnWidth * 4, mBmpCell.Height);
 
             setBackgroundImage();
         }

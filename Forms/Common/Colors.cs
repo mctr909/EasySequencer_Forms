@@ -5,9 +5,9 @@ namespace Forms {
     static class Colors {
         public static Color FormColor = Color.FromArgb(47, 95, 144);
 
-        public static Color GraphPoint = Color.FromArgb(63, TableCell.R, TableCell.G, TableCell.B);
+        public static Color GraphPoint = Color.FromArgb(47, TableCell.R, TableCell.G, TableCell.B);
         public static Color GraphLine = Color.FromArgb(127, 127, 127);
-        public static Color GraphLineAlpha = Color.FromArgb(127, 127, 127, 127);
+        public static Color GraphLineAlpha = Color.FromArgb(95, 191, 191, 191);
         public static Color GraphLineAlphaRed = Color.FromArgb(127, 255, 0, 0);
         public static Color GraphLineRed = Color.FromArgb(191, 31, 31);
         public static Color GraphLineYellow = Color.FromArgb(191, 191, 0);
@@ -37,20 +37,21 @@ namespace Forms {
             StartCap = LineCap.Round,
             EndCap = LineCap.Round
         };
-        public static Pen PGraphLineRed = new Pen(GraphLineRed, 3.0f) {
+        public static Pen PGraphLineRed = new Pen(GraphLineRed, 5.0f) {
             StartCap = LineCap.Round,
             EndCap = LineCap.Round
         };
-        public static Pen PGraphLineYellow = new Pen(GraphLineYellow, 3.0f) {
+        public static Pen PGraphLineYellow = new Pen(GraphLineYellow, 5.0f) {
             StartCap = LineCap.Round,
             EndCap = LineCap.Round
         };
-        public static Pen PGraphLineGreen = new Pen(GraphLineGreen, 3.0f) {
+        public static Pen PGraphLineGreen = new Pen(GraphLineGreen, 5.0f) {
             StartCap = LineCap.Round,
             EndCap = LineCap.Round
         };
-        public static Pen PGraphBorder = new Pen(GraphLineRed, 1.0f);
-        public static Pen PGraphValueBorder = new Pen(GraphLineAlphaRed, 3.0f);
+
+        public static Pen PGraphAuxiliary = new Pen(GraphLineRed, 1.0f);
+        public static Pen PGraphBoundaryValue = new Pen(GraphLineAlphaRed, 3.0f);
         public static Pen PTabBorder = new Pen(TabBorder, 1.0f);
         public static Pen PTabBorderBold = new Pen(TabBorder, 2.0f);
         public static Pen PTableBorder = new Pen(TableBorder, 1.0f);
