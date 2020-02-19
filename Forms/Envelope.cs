@@ -530,6 +530,7 @@ namespace Forms {
                     mPitch.DRelease = delta;
                     break;
                 case 3:
+                case 4:
                     mPitch.DRange = (pos.X - mCurPos.X) / 10 * 100;
                     break;
                 }
