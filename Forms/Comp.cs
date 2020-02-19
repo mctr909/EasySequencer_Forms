@@ -14,6 +14,7 @@ namespace Forms {
         private const int MinDB = -60;
         private const int ZeroDbCol = 10;
         private const int DbDispUnit = 12;
+        private const double ValueBorderGrip = 2.0;
 
         private static int AmpDispUnit = 30;
         private static int AmpDispWidth = AmpDispUnit * AmpDispCols;
@@ -103,7 +104,7 @@ namespace Forms {
         private void picRow_MouseDown(object sender, MouseEventArgs e) {
             var pos = picCell.PointToClient(Cursor.Position);
             var outputGain = -posToDb(picRow.Height - pos.Y);
-            if (mOutputGain - 1 < outputGain && outputGain < mOutputGain + 1) {
+            if (mOutputGain - ValueBorderGrip < outputGain && outputGain < mOutputGain + ValueBorderGrip) {
                 mScrollOutputGain = true;
                 Cursor.Current = Cursors.HSplit;
             }
@@ -121,7 +122,7 @@ namespace Forms {
                 return;
             }
             var outputGain = -posToDb(picRow.Height - pos.Y);
-            if (mOutputGain - 1 < outputGain && outputGain < mOutputGain + 1) {
+            if (mOutputGain - ValueBorderGrip < outputGain && outputGain < mOutputGain + ValueBorderGrip) {
                 Cursor.Current = Cursors.HSplit;
             }
         }
@@ -131,13 +132,13 @@ namespace Forms {
             var threshold = posToDb(pos.X);
             var gain = posToDb(picCell.Height - pos.Y);
             if (0 <= pos.X && pos.X < AmpDispUnit * ZeroDbCol &&
-                mThreshold - 1 < threshold && threshold < mThreshold + 1
+                mThreshold - ValueBorderGrip < threshold && threshold < mThreshold + ValueBorderGrip
             ) {
                 mScrollThreshold = true;
                 Cursor.Current = Cursors.VSplit;
             }
             if (AmpDispUnit * ZeroDbCol <= pos.X && pos.X < AmpDispWidth &&
-                mGain - 1 < gain && gain < mGain + 1
+                mGain - ValueBorderGrip < gain && gain < mGain + ValueBorderGrip
             ) {
                 mScrollGain = true;
                 Cursor.Current = Cursors.HSplit;
@@ -164,12 +165,12 @@ namespace Forms {
             var threshold = posToDb(pos.X);
             var gain = posToDb(picCell.Height - pos.Y);
             if (0 <= pos.X && pos.X < AmpDispUnit * ZeroDbCol &&
-                mThreshold - 1 < threshold && threshold < mThreshold + 1
+                mThreshold - ValueBorderGrip < threshold && threshold < mThreshold + ValueBorderGrip
             ) {
                 Cursor.Current = Cursors.VSplit;
             }
             if (AmpDispUnit * ZeroDbCol <= pos.X && pos.X < AmpDispWidth &&
-                mGain - 1 < gain && gain < mGain + 1
+                mGain - ValueBorderGrip < gain && gain < mGain + ValueBorderGrip
             ) {
                 Cursor.Current = Cursors.HSplit;
             }
