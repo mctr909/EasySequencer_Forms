@@ -9,6 +9,7 @@ namespace Forms {
         private PictureBox mBtnClose = new PictureBox();
         private PictureBox mBtnMaximize = new PictureBox();
         private PictureBox mBtnMinimize = new PictureBox();
+        private PictureBox mBtnHelp = new PictureBox();
 
         private bool mMoving = false;
         private Point mCurPos;
@@ -17,14 +18,15 @@ namespace Forms {
         public int FormCtrlBottom { get; private set; }
 
         public EventHandler WindowStateChanged;
+        public EventHandler HelpClicked;
 
-        public CommonCtrl(Form form, bool enableMaximize = false) {
+        public CommonCtrl(Form form, bool enableMaximize = false, bool enableHelp = false) {
             mForm = form;
 
             ((System.ComponentModel.ISupportInitialize)mBtnClose).BeginInit();
             ((System.ComponentModel.ISupportInitialize)mBtnMaximize).BeginInit();
             ((System.ComponentModel.ISupportInitialize)mBtnMinimize).BeginInit();
-
+            ((System.ComponentModel.ISupportInitialize)mBtnHelp).BeginInit();
             //
             // btnClose
             //
@@ -117,6 +119,35 @@ namespace Forms {
                 mBtnMinimize.Image = Properties.Resources.minimize_leave;
             });
             //
+            // btnHelp
+            //
+            mBtnHelp.BackColor = Color.Transparent;
+            mBtnHelp.Image = Properties.Resources.help_leave;
+            mBtnHelp.Location = new Point(201, 4);
+            mBtnHelp.Name = "btnHelp";
+            mBtnHelp.Size = new Size(30, 30);
+            mBtnHelp.TabIndex = 10;
+            mBtnHelp.TabStop = false;
+            mBtnHelp.Click += new EventHandler((object s, EventArgs e) => {
+                if (null != HelpClicked) {
+                    HelpClicked.Invoke(s, e);
+                }
+            });
+            mBtnHelp.MouseEnter += new EventHandler((object s, EventArgs e) => {
+                if (null != mBtnHelp.Image) {
+                    mBtnHelp.Image.Dispose();
+                    mBtnHelp.Image = null;
+                }
+                mBtnHelp.Image = Properties.Resources.help_hover;
+            });
+            mBtnHelp.MouseLeave += new EventHandler((object s, EventArgs e) => {
+                if (null != mBtnHelp.Image) {
+                    mBtnHelp.Image.Dispose();
+                    mBtnHelp.Image = null;
+                }
+                mBtnHelp.Image = Properties.Resources.help_leave;
+            });
+            //
             // form
             //
             mForm.BackColor = Colors.FormColor;
@@ -155,15 +186,20 @@ namespace Forms {
             });
             mForm.SizeChanged += new EventHandler((object s, EventArgs e) => {
                 mBtnClose.Top = 0;
-                mBtnClose.Left = mForm.Width - mBtnClose.Width;
                 mBtnMaximize.Top = 0;
                 mBtnMinimize.Top = 0;
-                if (enableMaximize) {
-                    mBtnMaximize.Left = mBtnClose.Left - mBtnMaximize.Width - 4;
-                    mBtnMinimize.Left = mBtnMaximize.Left - mBtnMinimize.Width - 4;
-                } else {
-                    mBtnMinimize.Left = mBtnClose.Left - mBtnMinimize.Width - 4;
+                mBtnHelp.Top = 0;
+                if (!enableMaximize) {
+                    mBtnMaximize.Width = 0;
                 }
+                if (!enableHelp) {
+                    mBtnHelp.Width = 0;
+                }
+                mBtnClose.Left = mForm.Width - mBtnClose.Width;
+                mBtnMaximize.Left = mBtnClose.Left - mBtnMaximize.Width - (0 == mBtnMaximize.Width ? 0 : 4);
+                mBtnMinimize.Left = mBtnMaximize.Left - mBtnMinimize.Width - 4;
+                mBtnHelp.Left = mBtnMinimize.Left - mBtnHelp.Width - 4;
+
                 FormCtrlLeft = mBtnMinimize.Left;
                 FormCtrlBottom = mBtnClose.Bottom;
             });
@@ -171,11 +207,15 @@ namespace Forms {
             if (enableMaximize) {
                 mForm.Controls.Add(mBtnMaximize);
             }
+            if (enableHelp) {
+                mForm.Controls.Add(mBtnHelp);
+            }
             mForm.Controls.Add(mBtnMinimize);
 
             ((System.ComponentModel.ISupportInitialize)mBtnClose).EndInit();
             ((System.ComponentModel.ISupportInitialize)mBtnMaximize).EndInit();
             ((System.ComponentModel.ISupportInitialize)mBtnMinimize).EndInit();
+            ((System.ComponentModel.ISupportInitialize)mBtnHelp).EndInit();
         }
     }
 }

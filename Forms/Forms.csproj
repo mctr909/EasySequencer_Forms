@@ -107,6 +107,8 @@
     <None Include="Icon\minimize_leave.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Icon\help_hover.png" />
+    <Content Include="Icon\help_leave.png" />
     <Content Include="Icon\maximize_hover.png" />
     <Content Include="Icon\maximize_leave.png" />
   </ItemGroup>
