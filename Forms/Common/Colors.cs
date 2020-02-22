@@ -6,11 +6,12 @@ namespace Forms {
         public static Color FormColor = Color.FromArgb(47, 95, 144);
 
         public static Color GraphPoint = Color.FromArgb(47, TableCell.R, TableCell.G, TableCell.B);
+
         public static Color GraphLine = Color.FromArgb(127, 127, 127);
         public static Color GraphLineAlpha = Color.FromArgb(95, 191, 191, 191);
         public static Color GraphLineAlphaRed = Color.FromArgb(127, 255, 0, 0);
         public static Color GraphLineRed = Color.FromArgb(191, 31, 31);
-        public static Color GraphLineYellow = Color.FromArgb(191, 191, 0);
+        public static Color GraphLineYellow = Color.FromArgb(211, 211, 0);
         public static Color GraphLineGreen = Color.FromArgb(31, 167, 31);
 
         public static Color ButtonLeave = Color.FromArgb(47, 47, 191);

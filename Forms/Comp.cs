@@ -54,7 +54,7 @@ namespace Forms {
         }
 
         private void Comp_Load(object sender, EventArgs e) {
-            mCommonCtrl = new CommonCtrl(this, true, true);
+            mCommonCtrl = new CommonCtrl(this, true);
             mCommonCtrl.WindowStateChanged = new EventHandler(Comp_WindowStateChanged);
             mRatio = -mThreshold / (mGain - mThreshold);
             drawBackground();

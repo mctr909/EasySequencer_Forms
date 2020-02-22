@@ -6,12 +6,12 @@ using System.Windows.Forms;
 
 namespace Forms {
     public partial class Envelope : Form {
-        private const int TableColumnWidth = 70;
         private const int TableHeaderHeight = 30;
         private const int TableLeftFrameWidth = 65;
-        private const int PitchDispUnit = 100;
-        private const int CutoffDispUnit = 32;
-        private const int AmpDispUnit = 30;
+        private static int TableColumnWidth = 70;
+        private static int PitchDispUnit = 100;
+        private static int CutoffDispUnit = 32;
+        private static int AmpDispUnit = 30;
 
         private class Values {
             private PictureBox mPicTime;
@@ -87,7 +87,6 @@ namespace Forms {
                 limit();
 
                 var attack = Attack + DAttack;
-                var hold = Hold + DHold;
                 var decay = Decay + DDecay;
                 var release = Release + DRelease;
                 var range = Range + DRange;
@@ -98,8 +97,6 @@ namespace Forms {
                     Range = range;
                     DRange = 0;
                 }
-
-                DrawValuePitch();
 
                 releaseImageTime();
 
@@ -457,8 +454,8 @@ namespace Forms {
         }
 
         private void Envelope_Load(object sender, EventArgs e) {
-            mCommonCtrl = new CommonCtrl(this);
-
+            mCommonCtrl = new CommonCtrl(this, true);
+            mCommonCtrl.WindowStateChanged = new EventHandler(Envelope_WindowStateChanged);
             mTabButtons = new TabButton(picTabButton, tab_Click, 14.0f, new string[] {
                  "Pitch",
                  "Cutoff",
@@ -479,6 +476,29 @@ namespace Forms {
             mAmp = new Values(picHeader, picCell);
             mAmp.Top = 1.0;
             mAmp.Sustain = 1.0;
+        }
+
+        private void Envelope_WindowStateChanged(object sender, EventArgs e) {
+            if (FormWindowState.Maximized == WindowState) {
+                var screen = Screen.FromControl(this);
+                var sw = screen.Bounds.Width;
+                var sh = screen.Bounds.Height;
+
+                TableColumnWidth = (sw - picRow.Width) / 5 / 2 * 2;
+                var pitchH = (sh - mCommonCtrl.FormCtrlBottom - picHeader.Height) / 4 / 2 * 2;
+                var cutoffH = (int)((sh - mCommonCtrl.FormCtrlBottom - picHeader.Height) / 11.25) / 2 * 2;
+                var ampH = (sh - mCommonCtrl.FormCtrlBottom - picHeader.Height) / 11 / 2 * 2;
+
+                PitchDispUnit = Math.Min(TableColumnWidth, pitchH);
+                CutoffDispUnit = Math.Min(TableColumnWidth, cutoffH);
+                AmpDispUnit = Math.Min(TableColumnWidth, ampH);
+            } else {
+                TableColumnWidth = 70;
+                PitchDispUnit = 100;
+                CutoffDispUnit = 32;
+                AmpDispUnit = 30;
+            }
+            tab_Click(sender, e);
         }
 
         private void picHeader_MouseDown(object sender, MouseEventArgs e) {
@@ -522,19 +542,24 @@ namespace Forms {
                 switch (moveCol) {
                 case 0:
                     mPitch.DAttack = delta;
+                    mPitch.DrawTimePitch();
                     break;
                 case 1:
                     mPitch.DDecay = delta;
+                    mPitch.DrawTimePitch();
                     break;
                 case 2:
                     mPitch.DRelease = delta;
+                    mPitch.DrawTimePitch();
                     break;
                 case 3:
                 case 4:
                     mPitch.DRange = (pos.X - mCurPos.X) / 10 * 100;
+                    mPitch.DrawTimePitch();
+                    mPitch.DrawValuePitch();
                     break;
                 }
-                mPitch.DrawTimePitch();
+
                 drawBackgroundPitchLeft();
                 break;
             case "Cutoff":

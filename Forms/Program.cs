@@ -13,7 +13,7 @@ namespace Forms {
         static void Main() {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Comp());
+            Application.Run(new Envelope());
         }
     }
 }
