@@ -243,15 +243,15 @@ namespace Forms {
                 mGRowValue.DrawLine(Colors.PTableBorder,
                     0, AmpDispUnit * row + pOutputGainY,
                     mBmpRow.Width, AmpDispUnit * row + pOutputGainY);
-                mGRowValue.DrawString(db.ToString("0.0db"), Fonts.Small, Colors.BFontTable, new RectangleF(
+                mGRowValue.DrawString(db.ToString("0.0db"), Fonts.Small, Colors.BTableFont, new RectangleF(
                     -3, AmpDispUnit * (row - 1) + pOutputGainY,
                     mBmpRowValue.Width, AmpDispUnit), Fonts.AlignBR);
             }
             //
-            mGRowValue.DrawString("0.0db", Fonts.Small, Colors.BFontTable, new RectangleF(
+            mGRowValue.DrawString("0.0db", Fonts.Small, Colors.BTableFont, new RectangleF(
                 -3, pOutputGainY - AmpDispUnit,
                 mBmpRowValue.Width, AmpDispUnit), Fonts.AlignBR);
-            mGRowValue.DrawLine(Colors.PGraphBoundaryValue, 0, pOutputGainY, mBmpRowValue.Width, pOutputGainY);
+            mGRowValue.DrawLine(Colors.PLineRA, 0, pOutputGainY, mBmpRowValue.Width, pOutputGainY);
             picRow.Image = mBmpRowValue;
             //
             // table
@@ -276,18 +276,18 @@ namespace Forms {
             }
             for (var y = AmpDispUnit / 2 + pOutputGainY; y < AmpDispHeight; y += AmpDispUnit) {
                 for (var x = AmpDispUnit / 2; x < AmpDispWidth; x += AmpDispUnit) {
-                    mBmpCellValue.SetPixel(x, y, Colors.TableBorder);
+                    mBmpCellValue.SetPixel(x, y, Colors.CTableBorder);
                 }
             }
             //
             mGCellValue.SmoothingMode = SmoothingMode.AntiAlias;
-            mGCellValue.DrawLine(Colors.PGraphLine, 0, AmpDispHeight, pThresholdX, pThresholdY);
-            mGCellValue.DrawLine(Colors.PGraphLine, pThresholdX, pThresholdY, AmpDispUnit * ZeroDbCol, pGainY);
-            mGCellValue.DrawLine(Colors.PGraphLineAlpha, AmpDispUnit * ZeroDbCol, pGainY, AmpDispWidth, pGainYR);
+            mGCellValue.DrawLine(Colors.PLine, 0, AmpDispHeight, pThresholdX, pThresholdY);
+            mGCellValue.DrawLine(Colors.PLine, pThresholdX, pThresholdY, AmpDispUnit * ZeroDbCol, pGainY);
+            mGCellValue.DrawLine(Colors.PLineA, AmpDispUnit * ZeroDbCol, pGainY, AmpDispWidth, pGainYR);
             //
             mGCellValue.DrawLine(Colors.PTableBorderLight, 0, pOutputGainY, mBmpCellValue.Width, pOutputGainY);
-            mGCellValue.DrawLine(Colors.PGraphBoundaryValue, pThresholdX, AmpDispUnit, pThresholdX, AmpDispHeight);
-            mGCellValue.DrawLine(Colors.PGraphBoundaryValue, AmpDispUnit * ZeroDbCol, pGainY, AmpDispWidth, pGainY);
+            mGCellValue.DrawLine(Colors.PLineRA, pThresholdX, AmpDispUnit, pThresholdX, AmpDispHeight);
+            mGCellValue.DrawLine(Colors.PLineRA, AmpDispUnit * ZeroDbCol, pGainY, AmpDispWidth, pGainY);
             //
             var uvL = Marshal.PtrToStructure<double>(mPtrUvL);
             var uvR = Marshal.PtrToStructure<double>(mPtrUvR);
@@ -301,19 +301,19 @@ namespace Forms {
             var pThX = (float)dbToPos(mThreshold);
             var pThY = AmpDispHeight - pThX;
             if (uvDb < mThreshold) {
-                mGCellValue.DrawLine(Colors.PGraphLineGreen, 0, AmpDispHeight, pUv, AmpDispHeight - pUv);
+                mGCellValue.DrawLine(Colors.PLineBoldG, 0, AmpDispHeight, pUv, AmpDispHeight - pUv);
             } else if (pUvRa <= pOutputGainX) {
-                mGCellValue.DrawLine(Colors.PGraphLineGreen, 0, AmpDispHeight, pThX, pThY);
-                mGCellValue.DrawLine(Colors.PGraphLineYellow, pThX, pThY, pUv, AmpDispHeight - pUvRa);
+                mGCellValue.DrawLine(Colors.PLineBoldG, 0, AmpDispHeight, pThX, pThY);
+                mGCellValue.DrawLine(Colors.PLineBoldY, pThX, pThY, pUv, AmpDispHeight - pUvRa);
             } else {
-                mGCellValue.DrawLine(Colors.PGraphLineGreen, 0, AmpDispHeight, pThX, pThY);
-                mGCellValue.DrawLine(Colors.PGraphLineRed, pThX, pThY, pUv, AmpDispHeight - pUvRa);
+                mGCellValue.DrawLine(Colors.PLineBoldG, 0, AmpDispHeight, pThX, pThY);
+                mGCellValue.DrawLine(Colors.PLineBoldR, pThX, pThY, pUv, AmpDispHeight - pUvRa);
             }
             mGCellValue.SmoothingMode = SmoothingMode.None;
             //
-            mGCellValue.FillPie(Colors.BGraphPoint, pThresholdX - 4, pThresholdY - 4, 8, 8, 0, 360);
+            mGCellValue.FillPie(Colors.BPoint, pThresholdX - 4, pThresholdY - 4, 8, 8, 0, 360);
             mGCellValue.DrawArc(Colors.PTableBorderLight, pThresholdX - 4, pThresholdY - 4, 8, 8, 0, 360);
-            mGCellValue.FillPie(Colors.BGraphPoint, AmpDispUnit * ZeroDbCol - 4, pGainY - 4, 8, 8, 0, 360);
+            mGCellValue.FillPie(Colors.BPoint, AmpDispUnit * ZeroDbCol - 4, pGainY - 4, 8, 8, 0, 360);
             mGCellValue.DrawArc(Colors.PTableBorderLight, AmpDispUnit * ZeroDbCol - 4, pGainY - 4, 8, 8, 0, 360);
             //
             var psThresholdY = pThresholdY;
@@ -324,16 +324,16 @@ namespace Forms {
             if (AmpDispHeight < psGainY + 20) {
                 psGainY = AmpDispHeight - 20;
             }
-            mGCellValue.DrawString(mThreshold.ToString("0.00db"), Fonts.Bold, Colors.BFontTable, new RectangleF(
+            mGCellValue.DrawString(mThreshold.ToString("0.00db"), Fonts.Bold, Colors.BTableFont, new RectangleF(
                 0, AmpDispUnit,
                 AmpDispUnit * ZeroDbCol, AmpDispUnit), Fonts.AlignMC);
-            mGCellValue.DrawString(mRatio.ToString("0.0"), Fonts.Bold, Colors.BFontTable, new RectangleF(
+            mGCellValue.DrawString(mRatio.ToString("0.0"), Fonts.Bold, Colors.BTableFont, new RectangleF(
                 AmpDispUnit * ZeroDbCol, AmpDispUnit,
                 AmpDispUnit * (AmpDispCols - ZeroDbCol), AmpDispUnit), Fonts.AlignMC);
             mGCellValue.DrawString((mThreshold + mOutputGain).ToString("0.00db"),
-                Fonts.Small, Colors.BFontTable, pThresholdX + 3, psThresholdY);
+                Fonts.Small, Colors.BTableFont, pThresholdX + 3, psThresholdY);
             mGCellValue.DrawString((mGain + mOutputGain).ToString("0.00db"),
-                Fonts.Small, Colors.BFontTable, AmpDispUnit * ZeroDbCol + 3, psGainY);
+                Fonts.Small, Colors.BTableFont, AmpDispUnit * ZeroDbCol + 3, psGainY);
 
             picCell.Image = mBmpCellValue;
         }
@@ -350,8 +350,8 @@ namespace Forms {
             //
             // left frame
             //
-            mGRow.Clear(Colors.TableHeader);
-            mGRow.DrawString("Gain", Fonts.Bold, Colors.BFontTable, new RectangleF(
+            mGRow.Clear(Colors.CTableHeader);
+            mGRow.DrawString("Gain", Fonts.Bold, Colors.BTableFont, new RectangleF(
                 0, 0,
                 TableLeftFrameWidth, AmpDispUnit), Fonts.AlignMC);
             mGRow.DrawLine(Colors.PTableBorderBold,
@@ -360,7 +360,7 @@ namespace Forms {
             //
             // table
             //
-            mGCell.Clear(Colors.TableCell);
+            mGCell.Clear(Colors.CTableCell);
             mGCell.FillRectangle(Colors.BTableHeader,
                 mBmpCell.Width, 0,
                 mBmpCell.Width, mBmpCell.Height);
@@ -372,10 +372,10 @@ namespace Forms {
             mGCell.FillRectangle(Colors.BTableHeader,
                 0, 0,
                 mBmpCell.Width, AmpDispUnit);
-            mGCell.DrawString("Threshold", Fonts.Bold, Colors.BFontTable, new RectangleF(
+            mGCell.DrawString("Threshold", Fonts.Bold, Colors.BTableFont, new RectangleF(
                 0, 0,
                 mBmpCell.Width - AmpDispUnit * (AmpDispCols - ZeroDbCol), AmpDispUnit), Fonts.AlignMC);
-            mGCell.DrawString("Ratio", Fonts.Bold, Colors.BFontTable, new RectangleF(
+            mGCell.DrawString("Ratio", Fonts.Bold, Colors.BTableFont, new RectangleF(
                 AmpDispUnit * ZeroDbCol, 0,
                 AmpDispUnit * (AmpDispCols - ZeroDbCol), AmpDispUnit), Fonts.AlignMC);
             mGCell.DrawLine(Colors.PTableBorderBold,
@@ -387,16 +387,16 @@ namespace Forms {
             //
             // footer
             //
-            mGCol.Clear(Colors.TableHeader);
+            mGCol.Clear(Colors.CTableHeader);
             for (int col = 0, db = MinDB; col < AmpDispCols; col += 2, db += DbDispUnit) {
                 mGCol.DrawLine(0 == db ? Colors.PTableBorderLight : Colors.PTableBorder,
                     AmpDispUnit * col, 0,
                     AmpDispUnit * col, mBmpCol.Height);
-                mGCol.DrawString(db.ToString("0db"), Fonts.Small, Colors.BFontTable, new RectangleF(
+                mGCol.DrawString(db.ToString("0db"), Fonts.Small, Colors.BTableFont, new RectangleF(
                     AmpDispUnit * col, 0,
                     AmpDispUnit * col, mBmpCol.Height), Fonts.AlignML);
             }
-            mGCol.DrawString("In", Fonts.Bold, Colors.BFontTable, new RectangleF(
+            mGCol.DrawString("In", Fonts.Bold, Colors.BTableFont, new RectangleF(
                 -8, 0,
                 mBmpCol.Width, mBmpCol.Height), Fonts.AlignMR);
             mGCol.DrawLine(Colors.PTableBorderBold, 0, 1, mBmpCol.Width, 1);

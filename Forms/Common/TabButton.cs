@@ -53,13 +53,13 @@ namespace Forms {
             foreach (var tab in mTabList) {
                 if (tab.Name == CurrentTab) {
                     mG.FillRectangle(Colors.BTabButtonEnable, tab.Rect);
-                    mG.DrawString(tab.Name, mFont, Colors.BFontTabButtonEnable, tab.Layout);
+                    mG.DrawString(tab.Name, mFont, Colors.BTabButtonEnableFont, tab.Layout);
                     mG.DrawLine(Colors.PTabBorderBold, tab.X1 + 1, 1, tab.X2 + 1, 1);
                     mG.DrawLine(Colors.PTabBorderBold, tab.X1 + 1, 1, tab.X1 + 1, tab.Y2 + 1);
                     mG.DrawLine(Colors.PTabBorderBold, tab.X2 + 1, 1, tab.X2 + 1, tab.Y2 + 1);
                 } else {
                     mG.FillRectangle(Colors.BTabButtonDisable, tab.Rect);
-                    mG.DrawString(tab.Name, mFont, Colors.BFontTabButtonDisable, tab.Layout);
+                    mG.DrawString(tab.Name, mFont, Colors.BTabButtonDisableFont, tab.Layout);
                     mG.DrawLine(Colors.PTabBorder, tab.X1 + 1, 1, tab.X2, 1);
                     mG.DrawLine(Colors.PTabBorder, tab.X1, 2, tab.X1, tab.Y2 + 1);
                     mG.DrawLine(Colors.PTabBorder, tab.X2 + 1, 2, tab.X2 + 1, tab.Y2 + 1);
