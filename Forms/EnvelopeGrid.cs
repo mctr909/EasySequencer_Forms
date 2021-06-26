@@ -30,17 +30,17 @@ public abstract class EnvelopeGrid {
     protected Bitmap mBmpLeftFrame;
     protected Graphics mGLeftFrame;
 
-    public int Attack { get; protected set; }
-    public int Hold { get; protected set; }
-    public int Decay { get; protected set; }
-    public int Release { get; protected set; }
-    public int Range { get; protected set; }
+    protected int mDAttack;
+    protected int mDHold;
+    protected int mDDecay;
+    protected int mDRelease;
+    protected int mDRange;
 
-    public int DAttack { get; protected set; }
-    public int DHold { get; protected set; }
-    public int DDecay { get; protected set; }
-    public int DRelease { get; protected set; }
-    public int DRange { get; protected set; }
+    public int Attack;
+    public int Hold;
+    public int Decay;
+    public int Release;
+    public int Range;
 
     public double Rise;
     public double Top;
@@ -55,16 +55,16 @@ public abstract class EnvelopeGrid {
     }
 
     public void Commit() {
-        Attack += DAttack;
-        Hold += DHold;
-        Decay += DDecay;
-        Release += DRelease;
-        Range += DRange;
-        DAttack = 0;
-        DHold = 0;
-        DDecay = 0;
-        DRelease = 0;
-        DRange = 0;
+        Attack += mDAttack;
+        Hold += mDHold;
+        Decay += mDDecay;
+        Release += mDRelease;
+        Range += mDRange;
+        mDAttack = 0;
+        mDHold = 0;
+        mDDecay = 0;
+        mDRelease = 0;
+        mDRange = 0;
     }
 
     public void DrawHeader() {
@@ -87,7 +87,7 @@ public abstract class EnvelopeGrid {
         mPicHeader.Image = mBmpHeader;
     }
 
-    public void DrawValue(int col = -1, Point pos = new Point()) {
+    public void DrawValue() {
         if (null != mBmpValue) {
             mBmpValue.Dispose();
             mBmpValue = null;
@@ -101,7 +101,7 @@ public abstract class EnvelopeGrid {
         mBmpValue = new Bitmap(mPicValue.Width, mPicValue.Height);
         mGValue = Graphics.FromImage(mBmpValue);
 
-        drawValue(col, pos);
+        drawValue();
 
         mPicValue.Image = mBmpValue;
     }
@@ -180,11 +180,13 @@ public abstract class EnvelopeGrid {
 
     public virtual void MouseMoveHeader(int col, int delta) { }
 
+    public virtual void MouseMoveValue(int col, Point pos) { }
+
     protected virtual void drawHeader() {
-        var attack = Attack + DAttack;
-        var hold = Hold + DHold;
-        var decay = Decay + DDecay;
-        var release = Release + DRelease;
+        var attack = Attack + mDAttack;
+        var hold = Hold + mDHold;
+        var decay = Decay + mDDecay;
+        var release = Release + mDRelease;
 
         mGHeader.Clear(Color.Transparent);
         mGHeader.DrawString(
@@ -217,60 +219,60 @@ public abstract class EnvelopeGrid {
         );
     }
 
-    protected virtual void drawValue(int col, Point pos) { }
+    protected virtual void drawValue() { }
 
     protected virtual void drawBackground() { }
 
     protected virtual void limitHeader() {
-        var attack = Attack + DAttack;
-        var hold = Hold + DHold;
-        var decay = Decay + DDecay;
-        var release = Release + DRelease;
-        var range = Range + DRange;
+        var attack = Attack + mDAttack;
+        var hold = Hold + mDHold;
+        var decay = Decay + mDDecay;
+        var release = Release + mDRelease;
+        var range = Range + mDRange;
 
         if (attack < 1) {
             Attack = 1;
-            DAttack = 0;
+            mDAttack = 0;
         }
         if (4000 < attack) {
             Attack = 4000;
-            DAttack = 0;
+            mDAttack = 0;
         }
 
         if (hold < 1) {
             Hold = 1;
-            DHold = 0;
+            mDHold = 0;
         }
         if (4000 < hold) {
             Hold = 4000;
-            DHold = 0;
+            mDHold = 0;
         }
 
         if (decay < 1) {
             Decay = 1;
-            DDecay = 0;
+            mDDecay = 0;
         }
         if (4000 < decay) {
             Decay = 4000;
-            DDecay = 0;
+            mDDecay = 0;
         }
 
         if (release < 1) {
             Release = 1;
-            DRelease = 0;
+            mDRelease = 0;
         }
         if (4000 < release) {
             Release = 4000;
-            DRelease = 0;
+            mDRelease = 0;
         }
 
         if (range < 100) {
             Range = 100;
-            DRange = 0;
+            mDRange = 0;
         }
         if (4800 < range) {
             Range = 4800;
-            DRange = 0;
+            mDRange = 0;
         }
     }
 }
@@ -299,16 +301,16 @@ public class AmpValues : EnvelopeGrid {
     public override void MouseMoveHeader(int col, int delta) {
         switch (col) {
         case 0:
-            DAttack = delta;
+            mDAttack = delta;
             break;
         case 1:
-            DHold = delta;
+            mDHold = delta;
             break;
         case 2:
-            DDecay = delta;
+            mDDecay = delta;
             break;
         case 4:
-            DRelease = delta;
+            mDRelease = delta;
             break;
         default:
             DrawHeader();
@@ -317,7 +319,7 @@ public class AmpValues : EnvelopeGrid {
         DrawHeader();
     }
 
-    protected override void drawValue(int col, Point pos) {
+    public override void MouseMoveValue(int col, Point pos) {
         var db = (int)((DispUnit - pos.Y) * 6.0 * 2 / DispUnit - 0.5) / 2.0;
         var gain = Math.Pow(10.0, db / 20.0);
         switch (col) {
@@ -328,7 +330,6 @@ public class AmpValues : EnvelopeGrid {
             Sustain = gain;
             break;
         }
-
         if (Top < 1 / 1024.0) {
             Top = 1 / 1024.0;
         }
@@ -341,7 +342,10 @@ public class AmpValues : EnvelopeGrid {
         if (1.0 < Sustain) {
             Sustain = 1.0;
         }
+        DrawValue();
+    }
 
+    protected override void drawValue() {
         var dbTop = 20 * Math.Log10(Top);
         var dbSustain = 20 * Math.Log10(Sustain);
         var pOfs = mPicValue.Height - 1;
@@ -366,14 +370,6 @@ public class AmpValues : EnvelopeGrid {
         mGValue.DrawLine(Colors.PLineA, ColumnWidth * 2, pTop, ColumnWidth * 3, pSustain);
         mGValue.DrawLine(Colors.PLineA, ColumnWidth * 3, pSustain, ColumnWidth * 4, pSustain);
         mGValue.DrawLine(Colors.PLineA, ColumnWidth * 4, pSustain, ColumnWidth * 5, pFall);
-        switch (col) {
-        case 1:
-            mGValue.DrawLine(Colors.PLineAuxiliary, 0, pTop, ColumnWidth * 5, pTop);
-            break;
-        case 3:
-            mGValue.DrawLine(Colors.PLineAuxiliary, 0, pSustain, ColumnWidth * 5, pSustain);
-            break;
-        }
         mGValue.SmoothingMode = SmoothingMode.None;
         //
         mGValue.FillPie(Colors.BPoint, ColumnWidth - 4, pTop - 4, 8, 8, 0, 360);
@@ -509,16 +505,16 @@ public class CutoffValues : EnvelopeGrid {
     public override void MouseMoveHeader(int col, int delta) {
         switch (col) {
         case 0:
-            DAttack = delta;
+            mDAttack = delta;
             break;
         case 1:
-            DHold = delta;
+            mDHold = delta;
             break;
         case 2:
-            DDecay = delta;
+            mDDecay = delta;
             break;
         case 4:
-            DRelease = delta;
+            mDRelease = delta;
             break;
         default:
             DrawHeader();
@@ -527,7 +523,7 @@ public class CutoffValues : EnvelopeGrid {
         DrawHeader();
     }
 
-    protected override void drawValue(int col, Point pos) {
+    public override void MouseMoveValue(int col, Point pos) {
         var freqPos = mPicValue.Height - pos.Y + DispUnit * 6;
         var freq = Math.Pow(10.0, freqPos * 0.25 / DispUnit);
         switch (col) {
@@ -573,6 +569,10 @@ public class CutoffValues : EnvelopeGrid {
             Fall = 20000;
         }
 
+        DrawValue();
+    }
+
+    protected override void drawValue() {
         var pOfs = mPicValue.Height + (int)(DispUnit * 4 * 1.5);
         var pRise = pOfs - (int)(Math.Log10(Rise) * DispUnit * 4);
         var pTop = pOfs - (int)(Math.Log10(Top) * DispUnit * 4);
@@ -603,20 +603,6 @@ public class CutoffValues : EnvelopeGrid {
         mGValue.DrawLine(Colors.PLineA, ColumnWidth * 2, pTop, ColumnWidth * 3, pSustain);
         mGValue.DrawLine(Colors.PLineA, ColumnWidth * 3, pSustain, ColumnWidth * 4, pSustain);
         mGValue.DrawLine(Colors.PLineA, ColumnWidth * 4, pSustain, ColumnWidth * 5, pFall);
-        switch (col) {
-        case 0:
-            mGValue.DrawLine(Colors.PLineAuxiliary, 0, pRise, ColumnWidth * 5, pRise);
-            break;
-        case 1:
-            mGValue.DrawLine(Colors.PLineAuxiliary, 0, pTop, ColumnWidth * 5, pTop);
-            break;
-        case 3:
-            mGValue.DrawLine(Colors.PLineAuxiliary, 0, pSustain, ColumnWidth * 5, pSustain);
-            break;
-        case 4:
-            mGValue.DrawLine(Colors.PLineAuxiliary, 0, pFall, ColumnWidth * 5, pFall);
-            break;
-        }
         mGValue.SmoothingMode = SmoothingMode.None;
         //
         mGValue.FillPie(Colors.BPoint, -4, pRise - 4, 8, 8, 0, 360);
@@ -765,37 +751,75 @@ public class PitchValues : EnvelopeGrid {
     public override void MouseMoveHeader(int col, int delta) {
         switch (col) {
         case 0:
-            DAttack = delta;
+            mDAttack = delta;
             break;
         case 1:
-            DDecay = delta;
+            mDDecay = delta;
             break;
         case 2:
-            DRelease = delta;
+            mDRelease = delta;
             break;
         case 3:
         case 4:
-            DRange = delta / 10 * 100;
+            mDRange = delta / 10 * 100;
             DrawValue();
             break;
         default:
-            DrawHeader();
             return;
         }
         DrawHeader();
     }
 
+    public override void MouseMoveValue(int col, Point pos) {
+        var pitchPos = DispUnit * 2 - pos.Y;
+        var pitch = (int)(pitchPos * Range / DispUnit + 0.5) / 2;
+        switch (col) {
+        case 0:
+            Rise = pitch;
+            break;
+        case 1:
+            Top = pitch;
+            break;
+        case 2:
+            Fall = pitch;
+            break;
+        }
+        var range = Range + mDRange;
+        if (range < 100) {
+            range = 100;
+        }
+        if (Rise < -range) {
+            Rise = -range;
+        }
+        if (range < Rise) {
+            Rise = range;
+        }
+        if (Top < -range) {
+            Top = -range;
+        }
+        if (range < Top) {
+            Top = range;
+        }
+        if (Fall < -range) {
+            Fall = -range;
+        }
+        if (range < Fall) {
+            Fall = range;
+        }
+        DrawValue();
+    }
+
     protected override void drawHeader() {
-        var attack = Attack + DAttack;
-        var decay = Decay + DDecay;
-        var release = Release + DRelease;
-        var range = Range + DRange;
+        var attack = Attack + mDAttack;
+        var decay = Decay + mDDecay;
+        var release = Release + mDRelease;
+        var range = Range + mDRange;
 
         var maxPitch = Math.Max(Math.Abs(Rise), Math.Max(Math.Abs(Top), Math.Abs(Fall)));
         if (range < maxPitch) {
             range = (int)(maxPitch / 100.0 + 0.99) * 100;
             Range = range;
-            DRange = 0;
+            mDRange = 0;
         }
 
         mGHeader.Clear(Color.Transparent);
@@ -829,46 +853,11 @@ public class PitchValues : EnvelopeGrid {
         );
     }
 
-    protected override void drawValue(int col, Point pos) {
-        var pitchPos = DispUnit * 2 - pos.Y;
-        var pitch = (int)(pitchPos * Range / DispUnit + 0.5) / 2;
-        switch (col) {
-        case 0:
-            Rise = pitch;
-            break;
-        case 1:
-            Top = pitch;
-            break;
-        case 2:
-            Fall = pitch;
-            break;
-        }
-
-        var range = Range + DRange;
-
+    protected override void drawValue() {
+        var range = Range + mDRange;
         if (range < 100) {
             range = 100;
         }
-
-        if (Rise < -range) {
-            Rise = -range;
-        }
-        if (range < Rise) {
-            Rise = range;
-        }
-        if (Top < -range) {
-            Top = -range;
-        }
-        if (range < Top) {
-            Top = range;
-        }
-        if (Fall < -range) {
-            Fall = -range;
-        }
-        if (range < Fall) {
-            Fall = range;
-        }
-
         var pOfs = DispUnit * 2 - 1;
         var pRise = pOfs - (int)(Rise * DispUnit * 2 / range);
         var pTop = pOfs - (int)(Top * DispUnit * 2 / range);
@@ -893,17 +882,6 @@ public class PitchValues : EnvelopeGrid {
         mGValue.DrawLine(Colors.PLineA, 0, pRise, ColumnWidth, pTop);
         mGValue.DrawLine(Colors.PLineA, ColumnWidth, pTop, ColumnWidth * 2, pSustain);
         mGValue.DrawLine(Colors.PLineA, ColumnWidth * 2, pSustain, ColumnWidth * 3, pFall);
-        switch (col) {
-        case 0:
-            mGValue.DrawLine(Colors.PLineAuxiliary, 0, pRise, ColumnWidth * 3, pRise);
-            break;
-        case 1:
-            mGValue.DrawLine(Colors.PLineAuxiliary, 0, pTop, ColumnWidth * 3, pTop);
-            break;
-        case 2:
-            mGValue.DrawLine(Colors.PLineAuxiliary, 0, pFall, ColumnWidth * 3, pFall);
-            break;
-        }
         mGValue.SmoothingMode = SmoothingMode.None;
         //
         mGValue.FillPie(Colors.BPoint, -4, pRise - 4, 8, 8, 0, 360);
@@ -1035,7 +1013,7 @@ public class PitchValues : EnvelopeGrid {
             mBmpLeftFrame.Width, mBmpLeftFrame.Height - 1
         );
         //
-        var range = Range + DRange;
+        var range = Range + mDRange;
         for (int y = 0; y <= 4; y++) {
             var cent = range - range * y / 2;
             var py = mBmpHeaderBackground.Height + DispUnit * (cent < 0 ? (y - 1) : y);

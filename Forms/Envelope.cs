@@ -152,13 +152,13 @@ namespace Forms {
             var pos = picValue.PointToClient(Cursor.Position);
             switch (mTabButtons.CurrentTab) {
             case "Amp":
-                mAmp.DrawValue(mCurPos.X / mAmp.ColumnWidth, pos);
+                mAmp.MouseMoveValue(mCurPos.X / mAmp.ColumnWidth, pos);
                 break;
             case "Cutoff":
-                mCutoff.DrawValue(mCurPos.X / mCutoff.ColumnWidth, pos);
+                mCutoff.MouseMoveValue(mCurPos.X / mCutoff.ColumnWidth, pos);
                 break;
             case "Pitch":
-                mPitch.DrawValue(mCurPos.X / mPitch.ColumnWidth, pos);
+                mPitch.MouseMoveValue(mCurPos.X / mPitch.ColumnWidth, pos);
                 break;
             }
         }
